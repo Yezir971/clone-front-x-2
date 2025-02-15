@@ -22,6 +22,5 @@ export async function GET(req, {params}){
             JSON.stringify({ message: "error", status: 400 }),
             { status: 400 }
         );
-
     }
 }

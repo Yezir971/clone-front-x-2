@@ -21,7 +21,7 @@ const usersSchema = new mongoose.Schema({
     },
     avatar: { 
         type: String, 
-        default: 'picture',
+        default: 'picture.png',
     },  
     suscription:{
         type:Array

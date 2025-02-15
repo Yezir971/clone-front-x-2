@@ -10,8 +10,7 @@ const notifMessageSchema = new mongoose.Schema({
         required:true,
     },
     notif:{
-        trype:Number,
-        required:true,
+        type:Number,
         default:0
     }
 },{
@@ -22,6 +21,6 @@ const notifMessageSchema = new mongoose.Schema({
 
 
 // condition pou pour éviter de créer plusierus fois le mm article si on execute plusieurs fois le code 
-const NotificationMessage = mongoose.models.NotificationMessage || mongoose.model('NotificationMessage', notifMessageSchema)
+const NotifsMessage = mongoose.models.NotifsMessage || mongoose.model('NotifsMessage', notifMessageSchema)
 
-export default NotificationMessage
+export default NotifsMessage

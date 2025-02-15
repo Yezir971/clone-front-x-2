@@ -4,14 +4,20 @@ import logo from "@/public/logo.png"
 import { useRouter } from "next/navigation"
 import { MdPersonSearch } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { authContextApi } from "../context/authContext";
 
 
 const SideBar = ({hide}) => {
+
     const router = useRouter()
     const [accordeonToogle, setAccordeonToogle] = useState(false)
     const [usersWhofriend, setUsersWhofriend] = useState([])
     const [loading, setLoading] = useState(true)
-    
+    // const [notification, setNotification] = useState([])
+
+    const {socket,setSocket, onlineUsers, userState, setOnlineUsers, notification, setNotification } = authContextApi()
+
+
     const logOut = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/user/logout', {
@@ -22,6 +28,9 @@ const SideBar = ({hide}) => {
                 
             })
             const data = await response.json()
+            // on déconnecte l'utilisateur pour les autres utilisateurs 
+            socket.emit('deleteUser', userState?.id)
+
             router.push('/')
             return data
         } catch (error) {
@@ -40,10 +49,64 @@ const SideBar = ({hide}) => {
             setLoading(false)
         }
     }
+
+    // const getNumberNotification = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:3000/api/message/notification',{
+    //             method:'PUT',
+    //             headers:{
+    //                 "Content-Type":"application/json"
+    //             },
+    //             body: JSON.stringify({
+    //                 // sender_id: userState.id ,
+    //                 reciev_id : userState?._id
+    //             })
+
+    //         })
+    //         const data = await response.json()
+    //         console.log(data)
+    //         setNotification(data.notif)
+    //         return data 
+    //     } catch (error) {
+    //         console.log(error.message)
+    //     }
+    // }
     
     useEffect(() => {
         getUsersWhoFriend()
+        // getNumberNotification()
     }, [])
+
+    // useEffect(() => {
+    //     if( socket === null ) return
+    //         socket.emit('addNewUser', userState?._id)
+    //         socket.on('getOnlineUser', (res) => {
+    //         setOnlineUsers(res)
+    //     })
+    // }, [userState])
+
+    // on récupère les notifications 
+    useEffect(() => {
+    if (!socket) return;
+    
+        // Écouter les nouvelles notifications
+        socket.on("recieveNotification", (newNotif) => {
+            // Ajouter le message reçu aux messages existants, pour respecter la structures du state notification on va parcourir notiification
+            // si on trouve un _id qui correspond a celui que l'on a on le remplace sinon on l'ajoute 
+            const updateNotifUser = notification?.map((element) => element._id === newNotif._id ? {...element, notif:newNotif.notif} : element)
+            console.log(newNotif)
+            console.log(updateNotifUser)
+            setNotification(updateNotifUser);
+            console.log(notification)
+        });
+    
+        // Nettoyer l'écouteur lors du démontage du composant
+        return () => socket.off("recieveNotification");
+    }, [socket, notification]);
+    console.log(notification)
+
+
+
     const toogleMessage = () => {
         setAccordeonToogle(!accordeonToogle)
     }
@@ -56,13 +119,17 @@ const SideBar = ({hide}) => {
                         <img src={logo.src} className="h-6 me-3 sm:h-7" alt="Logo clone-x" />
                         <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Hi, {}</span>
                     </a>
+            
+                    {/* {console.log(notification)} */}
                     <ul className="space-y-2 font-medium">
                         <li>
                             <div id="accordion-open" data-accordion="open">
                                 <h2 id="accordion-open-heading-1">
                                     <button onClick={toogleMessage} type="button" className="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-open-body-1" aria-expanded="true" aria-controls="accordion-open-body-1">
                                         <span className="flex items-center">
-                                            <span className="w-5 h-5 me-2 shrink-0 inline-flex items-center justify-center p-3 ms-3 text-sm font-medium text-white  bg-red-600   rounded-full ">3</span>
+                                            <span className="w-5 h-5 me-2 shrink-0 inline-flex items-center justify-center p-3 ms-3 text-sm font-medium text-white  bg-red-600   rounded-full ">
+                                                {notification ? notification?.reduce((acc, curr)=> acc + curr.notif, 0 ) : 0}
+                                            </span>
                                                 Messages
                                             </span>
                                         <svg data-accordion-icon className="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -82,6 +149,13 @@ const SideBar = ({hide}) => {
                                                     </svg>
                                                     {/* logo user  */}
                                                     <span className="flex-1 ms-3 whitespace-nowrap ">{element.username}</span>
+                                                        
+                                                    <span className="w-5 h-5 me-2 shrink-0 inline-flex items-center justify-center p-3 ms-3 text-sm font-medium text-white bg-red-600 rounded-full">
+                                                        {notification && notification?.map((elementNotif)=> (
+                                                            elementNotif.sender_id == element._id && elementNotif.notif 
+                                                        ))}
+                                                    </span>
+                                                        
                                                     {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white  bg-red-600   rounded-full ">3</span> */}
                                                 </Link>
                                             ))

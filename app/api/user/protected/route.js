@@ -19,7 +19,7 @@ export async function GET(){
         // on décrypt le token et on récupère l'id
         const {id} = jwt.verify(cookieTokenUser, process.env.TOKEN)
         // on cherche dans la bdd l'utilisateur 
-        const user = await Users.findById({_id: id})
+        const user = await Users.findById({_id: id}).select("-password");
         if(!user){
             return Response.json({message:`L'utilisateur n'existe pas !`, status:404}, {status:404})
         }
@@ -32,7 +32,7 @@ export async function GET(){
             return Response.json({message:`Votre compte a été désactiver !`, status:403}, {status:403})
         }
 
-        return Response.json({message:`L'utilisateur existe !`,id:id, username:user.username,  status:200}, {status:200})
+        return Response.json({message:`L'utilisateur existe !`,user:user,  status:200}, {status:200})
     } catch (error) {
         console.error(error)
         return Response.json({message:`Erreur de connexion avec la bdd !`, status:500}, {status:500})

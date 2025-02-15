@@ -1,13 +1,17 @@
 "use client";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 import SideBar from "../components/sideBar";
+import { authContextApi } from "../context/authContext";
 
 const UserPage = () => {
-    const router = useRouter()
+    // const router = useRouter()
     const [hide, setHide] = useState(false)
-    const [loading, setLoading] = useState(true)
-    const [authorized, setAuthorized] = useState(false)
+    // const [loading, setLoading] = useState(true)
+    // const [authorized, setAuthorized] = useState(false)
+    
+    const {loading,authorized } = authContextApi()
+    
     const burgerToogle = () => {
         setHide(!hide)
     }
@@ -15,35 +19,6 @@ const UserPage = () => {
         setHide(false)
     }
 
-
-    const fetchAuth = async () => {
-        try {
-            
-            const response = await fetch('http://localhost:3000/api/user/protected', {
-                method:"GET",
-                headers:{
-                    'Content-type':'application/json',
-                },
-                credentials: 'include'
-            })
-            const data = await response.json()
-            if(data.status !== 200 ){
-                router.push('/')
-            }
-            setLoading(false)
-            setAuthorized(true)
-        } catch (error) {
-            setLoading(false)
-            if(data.status !== 200 ){
-                router.push('/')
-            }
-            console.log(error)
-        }
-    }
-
-    useEffect(() => {
-        fetchAuth()
-    }, [])
 
 
     if(loading){
@@ -63,7 +38,7 @@ const UserPage = () => {
     return(
         <>
             {
-                authorized ? (
+                authorized && (
                     <>
                         <button onClick={burgerToogle} data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
                             <span className="sr-only">Open sidebar</span>
@@ -132,8 +107,6 @@ const UserPage = () => {
                             </div>
                         </div>
                     </>
-                ):(
-                    null
                 )
             }
         </>

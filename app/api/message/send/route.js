@@ -35,7 +35,7 @@ const addMessage = async (content) => {
 // récupère les messages des users 
 const getMessage = async ({sender_id,reciev_id }) => {
     try {
-        // on récupère les messages dans la bdd qui ont l'id du receveur et lid de l'envoyeur 
+        // on récupère les messages dans la bdd qui ont l'id du receveur et l'id de l'envoyeur 
         return await Message.find({
             $or: [
                 { sender_id: sender_id, reciev_id: reciev_id },
