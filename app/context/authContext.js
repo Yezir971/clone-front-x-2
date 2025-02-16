@@ -68,9 +68,11 @@ export const AuthProvider = ({ children }) => {
       if( socket === null ) return
           socket.emit('addNewUser', userState?._id)
           socket.on('getOnlineUser', (res) => {
-          setOnlineUsers(res)
-      })
-  }, [userState, socket])
+            setOnlineUsers(res)
+          }
+      )
+      
+    }, [userState, socket])
     useEffect(() => {
       // on attend que userState soit bien défini 
       if (!userState?._id) return; 
@@ -79,7 +81,7 @@ export const AuthProvider = ({ children }) => {
         try {
             console.log("userState dans getNumberNotification:", userState);
             if (!userState?._id) {
-                console.warn("userState._id est indéfini, l'API ne sera pas appelée");
+                console.log("userState._id est indéfini, l'API ne sera pas appelée");
                 return;
             }
             const response = await fetch('http://localhost:3000/api/message/notification',{

@@ -32,6 +32,8 @@ const Login = () => {
             console.log(data) 
             if(data.status == 200){
                 router.push('/user-page')
+                
+
             }
             setLoader(false)
             return 

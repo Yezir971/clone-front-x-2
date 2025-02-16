@@ -63,7 +63,7 @@ const Profil = () => {
                 
                 {/* Actions */}
                 <div className="mt-4 flex justify-end">
-                <Link href={'/update-profil'} className="bg-[#16DB65] text-gray-800 hover:bg-[#058C42] px-4 py-2 rounded-xl flex justify-center items-center gap-2" o>
+                <Link href={'/update-profil'} className="bg-[#16DB65] text-gray-800 hover:bg-[#058C42] px-4 py-2 rounded-xl flex justify-center items-center gap-2" >
                     <FaPen />
                     Modifier
                 </Link>

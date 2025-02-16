@@ -102,47 +102,47 @@ const feedPage = () => {
                                 </div>
 
                                 <div className="mb-4 rounded-sm ">
-                                    <div class=" p-6  rounded-lg shadow-lg">
+                                    <div className=" p-6  rounded-lg shadow-lg">
                                         {/* <!-- Liste des posts --> */}
-                                        <div id="postList" class="space-y-4 mt-4">
+                                        <div id="postList" className="space-y-4 mt-4">
                                             {/* <!-- Exemple de post --> */}
-                                            <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex space-x-4">
+                                            <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex space-x-4">
                                                 {/* <!-- Avatar et info utilisateur --> */}
-                                                <div class="flex-shrink-0">
-                                                    <img class="h-12 w-12 rounded-full" src="https://i.pravatar.cc/300" alt="Avatar" />
+                                                <div className="flex-shrink-0">
+                                                    <img className="h-12 w-12 rounded-full" src="https://i.pravatar.cc/300" alt="Avatar" />
                                                 </div>
-                                                <div class="flex flex-col justify-between w-full">
-                                                    <div class="flex justify-between items-center">
-                                                        <div class="text-gray-800 font-semibold">Nom de l'utilisateur</div>
-                                                        <div class="text-sm text-gray-500">Il y a 2 heures</div>
+                                                <div className="flex flex-col justify-between w-full">
+                                                    <div className="flex justify-between items-center">
+                                                        <div className="text-gray-800 font-semibold">Nom de l'utilisateur</div>
+                                                        <div className="text-sm text-gray-500">Il y a 2 heures</div>
                                                     </div>
-                                                    <p class="text-gray-700 mt-2">Voici le contenu du post ! Quelque chose d'intéressant à partager avec la communauté.</p>
+                                                    <p className="text-gray-700 mt-2">Voici le contenu du post ! Quelque chose d'intéressant à partager avec la communauté.</p>
                                                     {/* <!-- Boutons ou autres interactions --> */}
-                                                    <div class="flex space-x-4 mt-2 text-sm text-gray-500">
-                                                        <button class="hover:text-blue-500">J'aime</button>
-                                                        <button class="hover:text-blue-500">Commenter</button>
-                                                        <button class="hover:text-blue-500">Partager</button>
+                                                    <div className="flex space-x-4 mt-2 text-sm text-gray-500">
+                                                        <button className="hover:text-blue-500">J'aime</button>
+                                                        <button className="hover:text-blue-500">Commenter</button>
+                                                        <button className="hover:text-blue-500">Partager</button>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* <!-- Autre post --> */}
-                                            <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex space-x-4">
+                                            <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex space-x-4">
                                                 {/* <!-- Avatar et info utilisateur --> */}
-                                                <div class="flex-shrink-0">
-                                                    <img class="h-12 w-12 rounded-full" src="https://i.pravatar.cc/300" alt="Avatar" />
+                                                <div className="flex-shrink-0">
+                                                    <img className="h-12 w-12 rounded-full" src="https://i.pravatar.cc/300" alt="Avatar" />
                                                 </div>
-                                                <div class="flex flex-col justify-between w-full">
-                                                    <div class="flex justify-between items-center">
-                                                        <div class="text-gray-800 font-semibold">Autre Utilisateur</div>
-                                                        <div class="text-sm text-gray-500">Il y a 3 jours</div>
+                                                <div className="flex flex-col justify-between w-full">
+                                                    <div className="flex justify-between items-center">
+                                                        <div className="text-gray-800 font-semibold">Autre Utilisateur</div>
+                                                        <div className="text-sm text-gray-500">Il y a 3 jours</div>
                                                     </div>
-                                                    <p class="text-gray-700 mt-2">Voici un autre post. J'ai trouvé ça intéressant et je voulais le partager avec vous.</p>
+                                                    <p className="text-gray-700 mt-2">Voici un autre post. J'ai trouvé ça intéressant et je voulais le partager avec vous.</p>
                                                     {/* <!-- Boutons ou autres interactions --> */}
-                                                    <div class="flex space-x-4 mt-2 text-sm text-gray-500">
-                                                        <button class="hover:text-blue-500">J'aime</button>
-                                                        <button class="hover:text-blue-500">Commenter</button>
-                                                        <button class="hover:text-blue-500">Partager</button>
+                                                    <div className="flex space-x-4 mt-2 text-sm text-gray-500">
+                                                        <button className="hover:text-blue-500">J'aime</button>
+                                                        <button className="hover:text-blue-500">Commenter</button>
+                                                        <button className="hover:text-blue-500">Partager</button>
                                                     </div>
                                                 </div>
                                             </div>

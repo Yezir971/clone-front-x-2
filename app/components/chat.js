@@ -14,7 +14,7 @@ export default function Chat({id}) {
   const [hide, setHide] = useState(false)
   // const [userState, setUserState] = useState()
   
-  const {socket,setSocket, onlineUsers, userState, notification } = authContextApi()
+  const {socket,setSocket, onlineUsers, userState, notification , setNotification} = authContextApi()
 
   const burgerToogle = () => {
       setHide(!hide)
@@ -130,9 +130,11 @@ export default function Chat({id}) {
       console.log(messages)
     });
   
-    // Nettoyer l'écouteur lors du démontage du composant
-    return () => socket.off("receiveMessage");
-  }, [socket]);
+      // Nettoyer l'écouteur lors du démontage du composant
+      return () => socket.off("receiveMessage");
+    }, [socket]);
+
+   
 
   // fonction d'envoie de message 
   const sendMessage = async () => {
@@ -243,6 +245,7 @@ export default function Chat({id}) {
                         <span className="text-sm font-normal text-gray-500 dark:text-gray-400">{convertDate(msg.createdAt)}</span>
                       </div>
                     </div>
+                    {/* {console.log(notification)} */}
                     <div
                         className={` max-w-xs p-3 ${msg.reciev_id === id ? "bg-blue-600 ml-auto rounded-t-lg rounded-bl-lg" : "bg-gray-100 dark:bg-gray-700 rounded-t-lg rounded-br-lg" }  `}
                         >

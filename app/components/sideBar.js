@@ -13,9 +13,8 @@ const SideBar = ({hide}) => {
     const [accordeonToogle, setAccordeonToogle] = useState(false)
     const [usersWhofriend, setUsersWhofriend] = useState([])
     const [loading, setLoading] = useState(true)
-    // const [notification, setNotification] = useState([])
 
-    const {socket,setSocket, onlineUsers, userState, setOnlineUsers, notification, setNotification } = authContextApi()
+    const {socket, userState, notification, setNotification, usersWhoFriend } = authContextApi()
 
 
     const logOut = async () => {
@@ -50,59 +49,34 @@ const SideBar = ({hide}) => {
         }
     }
 
-    // const getNumberNotification = async () => {
-    //     try {
-    //         const response = await fetch('http://localhost:3000/api/message/notification',{
-    //             method:'PUT',
-    //             headers:{
-    //                 "Content-Type":"application/json"
-    //             },
-    //             body: JSON.stringify({
-    //                 // sender_id: userState.id ,
-    //                 reciev_id : userState?._id
-    //             })
-
-    //         })
-    //         const data = await response.json()
-    //         console.log(data)
-    //         setNotification(data.notif)
-    //         return data 
-    //     } catch (error) {
-    //         console.log(error.message)
-    //     }
-    // }
     
     useEffect(() => {
         getUsersWhoFriend()
         // getNumberNotification()
     }, [])
 
-    // useEffect(() => {
-    //     if( socket === null ) return
-    //         socket.emit('addNewUser', userState?._id)
-    //         socket.on('getOnlineUser', (res) => {
-    //         setOnlineUsers(res)
-    //     })
-    // }, [userState])
+
 
     // on récupère les notifications 
     useEffect(() => {
     if (!socket) return;
     
         // Écouter les nouvelles notifications
-        socket.on("recieveNotification", (newNotif) => {
+        socket.on("receiveNotification", (newNotif) => {
             // Ajouter le message reçu aux messages existants, pour respecter la structures du state notification on va parcourir notiification
             // si on trouve un _id qui correspond a celui que l'on a on le remplace sinon on l'ajoute 
             const updateNotifUser = notification?.map((element) => element._id === newNotif._id ? {...element, notif:newNotif.notif} : element)
-            console.log(newNotif)
-            console.log(updateNotifUser)
+            // console.log(newNotif)
+            // console.log(updateNotifUser)
             setNotification(updateNotifUser);
-            console.log(notification)
+            // console.log(notification)
         });
     
         // Nettoyer l'écouteur lors du démontage du composant
-        return () => socket.off("recieveNotification");
-    }, [socket, notification]);
+        return () => socket.off("receiveNotification");
+    }, [socket, notification, usersWhoFriend]);
+
+    
     console.log(notification)
 
 
