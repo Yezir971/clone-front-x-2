@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react"
 import SideBar from "../components/sideBar"
 import { useRouter } from "next/navigation"
+import { authContextApi } from "../context/authContext"
+import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 
 const feedPage = () => {
     const [hide, setHide] = useState(false)
@@ -10,6 +12,8 @@ const feedPage = () => {
     const [tweet,setTweet] = useState("")
     const [maxWord, setMaxWord] = useState(140)
     const [errorMessage,setErrorMessage] = useState("")
+    const {userState} = authContextApi()
+    
 
     const router = useRouter()
     const burgerToogle = () => {
@@ -48,20 +52,43 @@ const feedPage = () => {
     }, [])
 
     // fonction pour publier un post 
-    const publishPost = () => {
+    const publishPost = async () => {
         if(maxWord < 0 ){
             setErrorMessage('Votre publication est trop longue')
             return
         }
         setErrorMessage('')
         console.log(tweet)
+        // ici le code pour envoyer le message a la base de donnée 
+        try {
+            const response = await fetch('http://localhost:3000/api/post/tweet', {
+                method:'POST',
+                headers:{
+                    'Coontent-type':'application/json',
+                },
+                body:JSON.stringify({
+                    userWhoTweet:userState,
+                    contentTweets:tweet
+                })
+            })
+            const data = await response.json()
+            console.log(data)
+            return data
+        } catch (error) {
+            console.error(error.message)
+        }
+
+
+
+        setTweet('')
+        setMaxWord(140)
     }
     const decrementWord = (e) => {
         const input = e.target.value;
         setTweet(input);
         setMaxWord(140 - input.length);
     }
-    console.log(tweet)
+    // console.log(tweet)
     if(loading){
         return(
             <div className="min-h-screen flex items-center justify-center ">
@@ -163,7 +190,7 @@ const feedPage = () => {
                                                     <div className="flex space-x-4 mt-2 text-sm text-gray-500">
                                                         <button className="hover:text-blue-500">J'aime</button>
                                                         <button className="hover:text-blue-500">Commenter</button>
-                                                        <button className="hover:text-blue-500">Partager</button>
+                                                        <button className="hover:text-blue-500"><HiArrowPathRoundedSquare /></button>
                                                     </div>
                                                 </div>
                                             </div>
