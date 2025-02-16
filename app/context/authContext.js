@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
       // on récupère les notifications de l'utilisateur 
       const getNumberNotification = async () => {
         try {
-            console.log("userState dans getNumberNotification:", userState);
+            // console.log("userState dans getNumberNotification:", userState);
             if (!userState?._id) {
                 console.log("userState._id est indéfini, l'API ne sera pas appelée");
                 return;

@@ -67,6 +67,8 @@ app.prepare().then(() => {
         console.log(`Notification envoyée à : ${user.socketId} - ${dataNotification.notif}`);
       }
     });
+
+    
   });
 
   httpServer.listen(port, hostname, () => {

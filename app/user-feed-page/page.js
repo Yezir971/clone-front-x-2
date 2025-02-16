@@ -7,6 +7,10 @@ const feedPage = () => {
     const [hide, setHide] = useState(false)
     const [loading, setLoading] = useState(true)
     const [authorized, setAuthorized] = useState(false)
+    const [tweet,setTweet] = useState("")
+    const [maxWord, setMaxWord] = useState(140)
+    const [errorMessage,setErrorMessage] = useState("")
+
     const router = useRouter()
     const burgerToogle = () => {
         setHide(!hide)
@@ -43,6 +47,21 @@ const feedPage = () => {
         fetchAuth()
     }, [])
 
+    // fonction pour publier un post 
+    const publishPost = () => {
+        if(maxWord < 0 ){
+            setErrorMessage('Votre publication est trop longue')
+            return
+        }
+        setErrorMessage('')
+        console.log(tweet)
+    }
+    const decrementWord = (e) => {
+        const input = e.target.value;
+        setTweet(input);
+        setMaxWord(140 - input.length);
+    }
+    console.log(tweet)
     if(loading){
         return(
             <div className="min-h-screen flex items-center justify-center ">
@@ -84,12 +103,14 @@ const feedPage = () => {
 
                                         {/* <!-- Formulaire de publication --> */}
                                         <div className="space-y-4">
-                                            <textarea id="postContent" className="w-full p-4 border border-gray-300 rounded-lg text-lg placeholder-gray-400" rows="4" placeholder="Quoi de neuf ?"></textarea>
-                                            <div className="flex justify-end">
-                                                <button onClick="publishPost()" className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none">
+                                            <textarea value={tweet} onChange={(e) => decrementWord(e)} id="postContent" className="w-full p-4 border border-gray-300 rounded-lg text-lg placeholder-gray-400" rows="4" placeholder="Quoi de neuf ?"></textarea>
+                                            <div className="flex justify-end items-center">
+                                                <p className={` ${maxWord < 0 ? "text-red-700" : "text-white"} bold mx-6`}>{maxWord}</p>
+                                                <button onClick={publishPost} className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none">
                                                     Publier
                                                 </button>
                                             </div>
+                                            <p>{errorMessage}</p>
                                         </div>
 
                                         {/* <!-- Liste des posts --> */}

@@ -17,28 +17,39 @@ export default function Chat({id}) {
   const {socket,setSocket, onlineUsers, userState, notification , setNotification} = authContextApi()
 
   const burgerToogle = () => {
-      setHide(!hide)
+    setHide(!hide)
   }
   const burgerToogleWindow = () => {
     setHide(false)
   }
 
-  // console.log("onlineUsers", onlineUsers)
   useEffect(() => {
-    // fetchUser
-    // const fetchUser = async () => {
-    //   try {
-    //     const response = await fetch('http://localhost:3000/api/user/protected')
-    //     const data = await response.json()
-    //     // console.log(data.user)
-    //     setUserState(data.user)
-    //     // console.log(userState)
-    //   } catch (error) {
-    //     console.error(error.message)
-    //   }
-    // }
-    // fetchUser()
-    // fetchUser
+    // la première chause a faire lorsque l'on arrive sur la page c'est de supprimer les notifications de la conv 
+    const deleteNotification = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/message/notification', {
+          method:'DELETE',
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body: JSON.stringify({
+            sender_id: id,
+            reciev_id: userState?._id ,
+          }),
+        })
+        const data = await response.json()
+        console.log(notification)
+        const notificationUpdate = notification.map((element) => element.reciev_id == userState?._id && element.sender_id == id ? {...element, notif: 0} : element  )
+        console.log(notificationUpdate)
+        setNotification(notificationUpdate)
+        console.log(notification)
+        console.log(data)
+      } catch (error) {
+        console.error(error.message)
+      }
+    }
+    deleteNotification()
+
 
     // getUsersWhoFriend
     const getUsersWhoFriend = async () => {
@@ -58,31 +69,11 @@ export default function Chat({id}) {
     // getUsersWhoFriend
 
 
-    // if (typeof window !== "undefined") { // Vérification que le code est exécuté côté client
-    //   const socketInstance = io("http://localhost:3000");
-    //   setSocket(socketInstance);
-    //   // socketInstance.on("receiveMessage", (msg) => {
-    //   //   setMessages((prev) => [...prev, msg]);
-    //   // });
-    //   // console.log(messages)
-    //   return () => {
-    //     socketInstance.disconnect();
-    //   };
 
-    // }
 
   }, []);
 
-  // on récupère les messsages uniquement au moment où le state message  est mis a jour c'est a dire au moment où l'on envoie un message 
-  // useEffect(() => {
-  //   if(socket === null){
-  //     return
-  //   }
-  //   const idUserTarget = onlineUsers?.find((user) => user.userId === id)
-  //   console.log(message)
-  //   socket.emit('sendMessage', {message,idUserTarget })
 
-  // }, [message])
 
 
   // on récupère les messages uniquement lorsque userState est défini
@@ -137,7 +128,8 @@ export default function Chat({id}) {
    
 
   // fonction d'envoie de message 
-  const sendMessage = async () => {
+  const sendMessage = async (e) => {
+    e.preventDefault()
     if (message.trim() !== "") {
       const newMessage = {
         content: message,
@@ -256,22 +248,23 @@ export default function Chat({id}) {
             </div>
             {/* Messages */}
             {/* Input Field */}
-            <div className="p-4 bg-gray-800 flex items-center">
-            <input
-                type="text"
-                className="flex-1 p-2 bg-gray-700 rounded-lg outline-none"
-                placeholder="Écrivez un message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-            />
-            <button
-                type="submit"
-                className="ml-2 bg-green-600 p-2 rounded-lg hover:bg-green-500"
-                onClick={sendMessage}
-            >
-                <FaPaperPlane />
-            </button>
-            </div>
+            {/* <div className="p-4 bg-gray-800 flex items-center"> */}
+              <form className="p-4 bg-gray-800 flex items-center" onSubmit={sendMessage} >
+                <input
+                    type="text"
+                    className="flex-1 p-2 bg-gray-700 rounded-lg outline-none"
+                    placeholder="Écrivez un message..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                    <button
+                        type="submit"
+                        className="ml-2 bg-green-600 p-2 rounded-lg hover:bg-green-500"
+                    >
+                    <FaPaperPlane />
+                </button>
+              </form>
+            {/* </div> */}
         </div>
       </div>
     </div>
