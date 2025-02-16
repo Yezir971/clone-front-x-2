@@ -21,8 +21,8 @@ const usersSchema = new mongoose.Schema({
     },
     avatar: { 
         type: String, 
-        default: 'picture.png',
-    },  
+        default: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png',
+    },
     suscription:{
         type:Array
     },
@@ -34,6 +34,14 @@ const usersSchema = new mongoose.Schema({
         type: String, 
         enum: ['user', 'admin'],
         default: 'user',
+    },
+    description: {
+        type: String,
+        default: 'Hello there!'
+    },
+    baniere: {
+        type: String,
+        default: 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcHgxMTY5NTQwLWltYWdlLWpvYjYzMC1hLWwwZzA2OGd0LmpwZw.jpg'
     }
 },{
     // mogo va automatiquement ajouter la date a la création 
