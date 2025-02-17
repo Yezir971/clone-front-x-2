@@ -20,8 +20,8 @@ const Profil = () => {
             fetchUsers();  
         }, []);
 
-    return(
-        <>
+        return(
+            <>
             <div className="bg-gray-800 shadow-lg rounded-2xl p-6">
                 {/* Header Section */}
                 <div className="relative h-40 bg-slate-700 rounded-t-2xl">
@@ -56,8 +56,8 @@ const Profil = () => {
                 <p className="text-[#9b9a9a]">@{user.username}</p>
                 <p className="mt-2 text-[#c9c8c8]">{user.description}</p>
                 <div className="mt-3 flex space-x-4 text-[#acacac]">
-                    <span><strong>500</strong> Following</span>
-                    <span><strong>1.2K</strong> Followers</span>
+                    <span><strong>{user?.abonnements?.length}</strong> Abonnements</span>
+                    <span><strong>{user?.abonnés?.length}</strong> Abonnés</span>
                 </div>
                 </div>
                 

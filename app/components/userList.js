@@ -27,10 +27,17 @@ const UserList = () => {
     console.log("others: ",otherUsers);
     return (
         <>
-            <h2>Vous connaissez peut-être :</h2>
-            <ul>
+            <h2 className="text-[#c9c8c8] text-2xl ml-4">Vous connaissez peut-être :</h2>
+            <ul className="flex flex-col gap-6 mt-4 ml-4">
                 {otherUsers.map(otherUser => (
-                    <li key={otherUser._id}><a href={`/user/${otherUser._id}`}>{otherUser.username}</a></li>
+                    <li key={otherUser._id} className="bg-slate-700 rounded-lg h-16 w-56 hover:bg-gray-800">
+                        <img 
+                            src={otherUser.avatar}
+                            alt="avatar"
+                            className="rounded-full h-8"
+                        />
+                        <a href={`/user/${otherUser._id}`} className="text-[#c9c8c8] text-lg">{otherUser.username}</a>
+                    </li>
                 ))}
             </ul>
         </>

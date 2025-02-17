@@ -4,6 +4,7 @@ import { IoMdPersonAdd } from "react-icons/io";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import { URL } from "../utils/constant/url";
 import { useParams, useRouter } from "next/navigation";
+import { authContextApi } from "../context/authContext";
 
 const Profil = () => {
 
@@ -25,9 +26,29 @@ const Profil = () => {
 
     const thisUser = users.filter((user) => id === user._id);
 
+    const {userState} = authContextApi();
+    console.log('userState : ',userState);
     const [isFollowing, setIsFollowing] = useState(false);
-    const handleClick = () => {
+    const handleClick = async () => {
         setIsFollowing(!isFollowing);
+        try {
+            const res = await fetch(`http://localhost:3000/api/user/folow-user`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        idFollower: userState._id,
+                        idRecieve: id
+                    })
+                }
+            );
+            const data = await res.json();
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return(
@@ -60,8 +81,8 @@ const Profil = () => {
                 <p className="text-[#9b9a9a]">@{thisUser[0]?.username}</p>
                 <p className="mt-2 text-[#c9c8c8]">{thisUser[0]?.description}</p>
                 <div className="mt-3 flex space-x-4 text-[#acacac]">
-                    <span><strong>500</strong> Following</span>
-                    <span><strong>1.2K</strong> Followers</span>
+                    <span><strong>{thisUser[0]?.abonnements.length}</strong> Abonnements</span>
+                    <span><strong>{thisUser[0]?.abonnés.length}</strong> Abonnés</span>
                 </div>
                 </div>
                 <div className="mt-4 flex justify-end">
