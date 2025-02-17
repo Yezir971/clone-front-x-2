@@ -29,8 +29,8 @@ const UserList = () => {
         <>
             <h2>Vous connaissez peut-être :</h2>
             <ul>
-                {otherUsers.map(user => (
-                    <li key={user._id}><a href={`/user/${user._id}`}>{user.username}</a></li>
+                {otherUsers.map(otherUser => (
+                    <li key={otherUser._id}><a href={`/user/${otherUser._id}`}>{otherUser.username}</a></li>
                 ))}
             </ul>
         </>
