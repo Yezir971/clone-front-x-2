@@ -1,12 +1,37 @@
 import { HiArrowPathRoundedSquare } from "react-icons/hi2";
-const TweetCard = ({ tweet, toggleModal }) => {
+import { RiPokerHeartsFill } from "react-icons/ri";
+{/* <RiPokerHeartsFill />  */}
+import { RiPokerHeartsLine } from "react-icons/ri";
+{/* <RiPokerHeartsLine /> */}
+const TweetCard = ({ tweet, toggleModal, userState }) => {
     let isRetweet = tweet?.retweet;
+    let idUser = userState._id
+    let isLiked = tweet?.like.some((element) => element === idUser)
+    console.log(isLiked)
+    let idTweet = tweet._id
+    const dataUser = {idUser:idUser , idTweet:idTweet}
+    console.log("id user" + userState._id)
+    console.log("id tweet" + tweet._id)
+    const fetchLike = async (req) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/post/like', {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                },
+                body: JSON.stringify(dataUser) 
+            })
+            const data = await response.json()
+            console.log(data)
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
     return (
         <>
             {/* Retweet Indicator */}
             {!isRetweet ? (
                 <>
-                    {console.log("dans card"+{tweet})}
                     <div className={`bg-white p-4 rounded-lg shadow-md border border-gray-200 flex ${isRetweet ? "border-green-500" : ""}`}>
                         {/* Avatar */}
                         <div className="flex-shrink-0">
@@ -21,7 +46,14 @@ const TweetCard = ({ tweet, toggleModal }) => {
                         </div>
                         <p className="text-gray-700 mt-2">{tweet?.contentTweets}</p>
                         <div className="flex space-x-4 mt-3 text-lg text-gray-500">
-                            <button className="hover:text-blue-500">J'aime</button>
+                            <button onClick={() => fetchLike(dataUser)} className="text-red-600 cursor-pointer">
+                                {isLiked ? (
+                                    <RiPokerHeartsFill /> 
+
+                                ):(
+                                    <RiPokerHeartsLine />
+                                )}
+                            </button>
                             <button className="hover:text-blue-500">Commenter</button>
                             <button onClick={() => toggleModal(tweet?._id)} className="hover:text-green-500">
                             <HiArrowPathRoundedSquare />
@@ -40,8 +72,8 @@ const TweetCard = ({ tweet, toggleModal }) => {
                         {/* repost  */}
                         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex ">
                             {/* Avatar et contenu principal */}
-                            <div className="flex-shrink-0">
-                                <img className="h-12 w-12 rounded-full" src="https://img.20mn.fr/M0L5sgogQkOJk6YFacRw_yk/1444x920_booba-attending-the-casablanca-womenswear-spring-summer-2024-fashion-show-as-part-of-the-paris-fashion-week-in-paris-france-on-october-01-2023-03haedrichjm-jmh-0047-credit-jm-haedrich-sipa-2310020623" alt="Avatar" />
+                            <div className="flex-shrink-0 mr-4">
+                                <img className="h-12 w-12 rounded-full" src={tweet?.userWhoHasReTweet?.avatar} alt="Avatar" />
                             </div>
                             <div className="flex flex-col justify-between w-full">
                                 {/* Nom et date */}
@@ -72,7 +104,14 @@ const TweetCard = ({ tweet, toggleModal }) => {
 
                                 {/* Actions */}
                                 <div className="flex space-x-6 mt-3 text-gray-500">
-                                <button className="hover:text-blue-500">J'aime</button>
+                                <button onClick={() => fetchLike(dataUser)} className="text-red-600 cursor-pointer">
+                                    {isLiked ? (
+                                        <RiPokerHeartsFill /> 
+
+                                    ):(
+                                        <RiPokerHeartsLine />
+                                    )}
+                                </button>
                                 <button className="hover:text-blue-500">Commenter</button>
                                 <button onClick={() => toggleModal(tweet?._id)} className="hover:text-green-500">
                                 <HiArrowPathRoundedSquare />

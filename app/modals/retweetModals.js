@@ -5,7 +5,7 @@ import { authContextApi } from "../context/authContext"
 const RetweetModals = ({datasTweet, userState}) => {
     const [comment ,setComment ] = useState('')
     const {setHideModal, maxWord, setMaxWord, socket} = authContextApi()
-    // console.log(userState)
+    console.log(userState)
 
 
 

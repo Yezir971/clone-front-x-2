@@ -198,7 +198,7 @@ const feedPage = () => {
                                         {/* <!-- Liste des posts --> */}
                                         {tweets && tweets?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((element, id) => (
                                         <div key={id} id="postList" className="space-y-4 mt-4">
-                                            <TweetCard tweet={element} toggleModal={toggleModal} />
+                                            <TweetCard tweet={element} userState={userState} toggleModal={toggleModal} />
                                             
                                             {hideModal[element?._id] && <RetweetModals datasTweet={element} userState={userState} />}
                                             
