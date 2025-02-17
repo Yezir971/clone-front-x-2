@@ -13,6 +13,10 @@ export const AuthProvider = ({ children }) => {
     const [notification, setNotification] = useState([])
     const [loading, setLoading] = useState(true)
     const [authorized, setAuthorized] = useState(false)
+    const [hideModal, setHideModal] = useState([])
+    const [maxWord, setMaxWord] = useState(140)
+
+
     const router = useRouter()
 
 
@@ -108,7 +112,7 @@ export const AuthProvider = ({ children }) => {
     }, [userState])
 
     return (
-        <AuthContext.Provider value={{ socket, setSocket, onlineUsers, setOnlineUsers, userState, setUserState, notification, setNotification, loading, setLoading, authorized, setAuthorized  }}>
+        <AuthContext.Provider value={{ maxWord, setMaxWord, socket, setSocket,hideModal, setHideModal, onlineUsers, setOnlineUsers, userState, setUserState, notification, setNotification, loading, setLoading, authorized, setAuthorized  }}>
             {children}
         </AuthContext.Provider>
     );

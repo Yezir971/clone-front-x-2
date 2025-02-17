@@ -4,15 +4,18 @@ import SideBar from "../components/sideBar"
 import { useRouter } from "next/navigation"
 import { authContextApi } from "../context/authContext"
 import { HiArrowPathRoundedSquare } from "react-icons/hi2";
+import { HiOutlineDotsHorizontal } from 'react-icons/hi';
+import RetweetModals from "../modals/retweetModals"
+import TweetCard from "../components/tweetCard"
 
 const feedPage = () => {
     const [hide, setHide] = useState(false)
     const [loading, setLoading] = useState(true)
     const [authorized, setAuthorized] = useState(false)
     const [tweet,setTweet] = useState("")
-    const [maxWord, setMaxWord] = useState(140)
     const [errorMessage,setErrorMessage] = useState("")
-    const {userState} = authContextApi()
+    const [tweets, setTweets] = useState([])
+    const {userState, socket,hideModal, setHideModal, maxWord, setMaxWord} = authContextApi()
     
 
     const router = useRouter()
@@ -22,6 +25,12 @@ const feedPage = () => {
     const burgerToogleWindow = () => {
         setHide(false)
     }
+    const toggleModal = (tweetId) => {
+        setHideModal((prev) => ({
+          ...prev,
+          [tweetId]: !prev[tweetId],
+        }));
+    };
     const fetchAuth = async () => {
         try {
             
@@ -47,9 +56,42 @@ const feedPage = () => {
         }
     }
 
+    const getPost = async() => {
+        try {
+            const response = await fetch('http://localhost:3000/api/post/tweet')
+            const data = await response.json()
+            console.log(data)
+            setTweets(data.dataTweet)
+            return data
+        } catch (error) {
+            console.error(error.message)
+        }
+    }
+
+    
+
+
+    // on récupère les posts depuis la bdd pour la première arriver sur la page
     useEffect(() => {
         fetchAuth()
+        getPost()
     }, [])
+    // on récupère les posts depuis le serveur websocket, on attend chaque rafraichissement de la page pour mettre a jour le state des tweets
+    useEffect(() => {
+        if (!socket){
+          console.log("no socket")
+          return;
+        } 
+      
+        // on écoute les nouveaux messages
+        socket.on("receiveTweets", (newTweets) => {
+          // ajoute le tweet reçu aux tweets existants
+          setTweets((prevTweets) => [...prevTweets, newTweets]);
+        });
+      
+        // On nettoye l'écouteur lors du démontage du composant
+        return () => socket.off("receiveTweets");
+    }, [socket ]);
 
     // fonction pour publier un post 
     const publishPost = async () => {
@@ -64,24 +106,26 @@ const feedPage = () => {
             const response = await fetch('http://localhost:3000/api/post/tweet', {
                 method:'POST',
                 headers:{
-                    'Coontent-type':'application/json',
+                    'Content-type':'application/json',
                 },
                 body:JSON.stringify({
-                    userWhoTweet:userState,
+                    userWhoTweet:userState?._id,
                     contentTweets:tweet
                 })
             })
             const data = await response.json()
+            // si il n'y a pas d'erreur on envoie le tweet au serveur 
+            if(data.status === 200 ){
+
+                socket.emit('tweet', data)
+                setTweet('')
+                setMaxWord(140)
+            }
             console.log(data)
             return data
         } catch (error) {
             console.error(error.message)
         }
-
-
-
-        setTweet('')
-        setMaxWord(140)
     }
     const decrementWord = (e) => {
         const input = e.target.value;
@@ -140,7 +184,7 @@ const feedPage = () => {
                                             <p>{errorMessage}</p>
                                         </div>
 
-                                        {/* <!-- Liste des posts --> */}
+                                    
                                         <div className="mt-8">
                                             <h2 className="text-xl font-semibold dark:text-white">Posts récents</h2>
                                             <div id="postList" className="space-y-4 mt-4">
@@ -152,50 +196,22 @@ const feedPage = () => {
                                 <div className="mb-4 rounded-sm ">
                                     <div className=" p-6  rounded-lg shadow-lg">
                                         {/* <!-- Liste des posts --> */}
-                                        <div id="postList" className="space-y-4 mt-4">
-                                            {/* <!-- Exemple de post --> */}
-                                            <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex space-x-4">
-                                                {/* <!-- Avatar et info utilisateur --> */}
-                                                <div className="flex-shrink-0">
-                                                    <img className="h-12 w-12 rounded-full" src="https://i.pravatar.cc/300" alt="Avatar" />
-                                                </div>
-                                                <div className="flex flex-col justify-between w-full">
-                                                    <div className="flex justify-between items-center">
-                                                        <div className="text-gray-800 font-semibold">Nom de l'utilisateur</div>
-                                                        <div className="text-sm text-gray-500">Il y a 2 heures</div>
-                                                    </div>
-                                                    <p className="text-gray-700 mt-2">Voici le contenu du post ! Quelque chose d'intéressant à partager avec la communauté.</p>
-                                                    {/* <!-- Boutons ou autres interactions --> */}
-                                                    <div className="flex space-x-4 mt-2 text-sm text-gray-500">
-                                                        <button className="hover:text-blue-500">J'aime</button>
-                                                        <button className="hover:text-blue-500">Commenter</button>
-                                                        <button className="hover:text-blue-500">Partager</button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {tweets && tweets?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((element, id) => (
+                                        <div key={id} id="postList" className="space-y-4 mt-4">
+                                            <TweetCard tweet={element} toggleModal={toggleModal} />
+                                            
+                                            {hideModal[element?._id] && <RetweetModals dataTweet={element} userState={userState} />}
+                                            
+                                            {!element?.reTweet && (
+                                                <>
 
-                                            {/* <!-- Autre post --> */}
-                                            <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex space-x-4">
-                                                {/* <!-- Avatar et info utilisateur --> */}
-                                                <div className="flex-shrink-0">
-                                                    <img className="h-12 w-12 rounded-full" src="https://i.pravatar.cc/300" alt="Avatar" />
-                                                </div>
-                                                <div className="flex flex-col justify-between w-full">
-                                                    <div className="flex justify-between items-center">
-                                                        <div className="text-gray-800 font-semibold">Autre Utilisateur</div>
-                                                        <div className="text-sm text-gray-500">Il y a 3 jours</div>
-                                                    </div>
-                                                    <p className="text-gray-700 mt-2">Voici un autre post. J'ai trouvé ça intéressant et je voulais le partager avec vous.</p>
-                                                    {/* <!-- Boutons ou autres interactions --> */}
-                                                    <div className="flex space-x-4 mt-2 text-sm text-gray-500">
-                                                        <button className="hover:text-blue-500">J'aime</button>
-                                                        <button className="hover:text-blue-500">Commenter</button>
-                                                        <button className="hover:text-blue-500"><HiArrowPathRoundedSquare /></button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                </>
+                                            )}
                                         </div>
+                                        ))}
                                     </div>
+
+                                        
                                 </div>
                             </div>
                         </div>

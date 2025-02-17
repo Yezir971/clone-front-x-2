@@ -6,7 +6,8 @@ const tweetSchema = new mongoose.Schema({
         required:true
     },
     userWhoTweet:{
-        type: Array,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
         required:true
     },
     like:{
@@ -18,7 +19,11 @@ const tweetSchema = new mongoose.Schema({
         default:false
     },
     userWhoHasReTweet:{
-        type:Array,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    },
+    contentReTweet:{
+        type: String,
     }
 },{
     // mogo va automatiquement ajouter la date a la création 

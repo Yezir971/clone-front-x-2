@@ -38,12 +38,12 @@ export default function Chat({id}) {
           }),
         })
         const data = await response.json()
-        console.log(notification)
+        // console.log(notification)
         const notificationUpdate = notification.map((element) => element.reciev_id == userState?._id && element.sender_id == id ? {...element, notif: 0} : element  )
-        console.log(notificationUpdate)
+        // console.log(notificationUpdate)
         setNotification(notificationUpdate)
-        console.log(notification)
-        console.log(data)
+        // console.log(notification)
+        // console.log(data)
       } catch (error) {
         console.error(error.message)
       }
@@ -113,7 +113,7 @@ export default function Chat({id}) {
       return;
     } 
   
-    // Écouter les nouveaux messages
+    // on écoute les nouveaux messages
     socket.on("receiveMessage", (newMessage) => {
       // Ajouter le message reçu aux messages existants
       console.log(newMessage)

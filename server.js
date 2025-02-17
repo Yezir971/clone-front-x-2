@@ -67,7 +67,11 @@ app.prepare().then(() => {
         console.log(`Notification envoyée à : ${user.socketId} - ${dataNotification.notif}`);
       }
     });
-
+    // socket pour écouter en temps réel les tweets
+    socket.on('tweet', (newTweet) => {
+      console.log(newTweet.dataTweet)
+      io.emit('receiveTweets', newTweet.dataTweet)
+    })
     
   });
 
