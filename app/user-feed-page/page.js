@@ -93,6 +93,8 @@ const feedPage = () => {
         return () => socket.off("receiveTweets");
     }, [socket ]);
 
+
+
     // fonction pour publier un post 
     const publishPost = async () => {
         if(maxWord < 0 ){
@@ -196,8 +198,8 @@ const feedPage = () => {
                                 <div className="mb-4 rounded-sm ">
                                     <div className=" p-6  rounded-lg shadow-lg">
                                         {/* <!-- Liste des posts --> */}
-                                        {tweets && tweets?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((element, id) => (
-                                        <div key={id} id="postList" className="space-y-4 mt-4">
+                                        {tweets && tweets?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((element) => (
+                                        <div key={element._id} id="postList" className="space-y-4 mt-4">
                                             <TweetCard tweet={element} userState={userState} toggleModal={toggleModal} />
                                             
                                             {hideModal[element?._id] && <RetweetModals datasTweet={element} userState={userState} />}

@@ -2,17 +2,27 @@ import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import { RiPokerHeartsFill } from "react-icons/ri";
 {/* <RiPokerHeartsFill />  */}
 import { RiPokerHeartsLine } from "react-icons/ri";
+import { authContextApi } from "../context/authContext";
+import { useEffect, useState } from "react";
 {/* <RiPokerHeartsLine /> */}
 const TweetCard = ({ tweet, toggleModal, userState }) => {
-    let isRetweet = tweet?.retweet;
-    let idUser = userState._id
-    let isLiked = tweet?.like.some((element) => element === idUser)
-    console.log(isLiked)
-    let idTweet = tweet._id
-    const dataUser = {idUser:idUser , idTweet:idTweet}
-    console.log("id user" + userState._id)
-    console.log("id tweet" + tweet._id)
-    const fetchLike = async (req) => {
+    const {socket} = authContextApi()
+    
+    let isRetweet = tweet?.retweet
+    let idUser = userState?._id
+    // console.log(tweet.like.some((element) => element == idUser))
+    // let isLiked = tweet?.like?.some((element) => element === idUser)
+    let [numberLike, setnumberLike] = useState(0)
+    // setIsLiked(tweet?.like?.some((element) => element == idUser))
+    const [isLiked, setIsLiked] = useState(tweet?.like?.some((element) => element == idUser))
+    let idTweet = tweet?._id
+    let dataUser = {idUser:idUser , idTweet:idTweet}
+    // console.log("id user" + userState?._id)
+    // console.log("id tweet" + tweet._id)
+    useEffect(() => {
+        setnumberLike(tweet?.like?.length)
+    }, [])
+    const fetchLike = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/post/like', {
                 method:"POST",
@@ -22,11 +32,37 @@ const TweetCard = ({ tweet, toggleModal, userState }) => {
                 body: JSON.stringify(dataUser) 
             })
             const data = await response.json()
-            console.log(data)
+            // on envoie au serveur le fait que un nouveau utilisateur a like le contenu
+            if(data.status === 200 ){
+                socket.emit('like',{ dataLike: data?.newtweet?.like.length, idTweet:idTweet} )
+                // console.log(data?.newtweet?.like.length)
+                // console.log(data)
+                setIsLiked((prev) => !prev);
+                setnumberLike((prev) => (isLiked ? prev - 1 : prev + 1));
+            }
+            // console.log(data)
         } catch (error) {
             console.error(error.message)
         }
     }
+    // nombres de like 
+    useEffect(() => {
+        if (!socket){
+            console.log("no socket")
+            return;
+        } 
+
+        // on écoute les nouveaux like sur son propre serveur
+        socket.on(`receiveLike_${idTweet}`, ({dataLike}) => {
+            // on met a jour le tweet qui a été aimer par un autre utilisateur 
+            // console.log(tweet._id)
+            // console.log(idTweet)
+            setnumberLike(dataLike);
+        });
+
+        // On nettoye l'écouteur lors du démontage du composant
+        return () => socket.off(`receiveLike_${idTweet}`);
+    }, [socket])
     return (
         <>
             {/* Retweet Indicator */}
@@ -46,7 +82,8 @@ const TweetCard = ({ tweet, toggleModal, userState }) => {
                         </div>
                         <p className="text-gray-700 mt-2">{tweet?.contentTweets}</p>
                         <div className="flex space-x-4 mt-3 text-lg text-gray-500">
-                            <button onClick={() => fetchLike(dataUser)} className="text-red-600 cursor-pointer">
+                            <p className="text-red-600">{numberLike}</p>
+                            <button onClick={fetchLike} className="text-red-600 cursor-pointer">
                                 {isLiked ? (
                                     <RiPokerHeartsFill /> 
 
@@ -104,7 +141,8 @@ const TweetCard = ({ tweet, toggleModal, userState }) => {
 
                                 {/* Actions */}
                                 <div className="flex space-x-6 mt-3 text-gray-500">
-                                <button onClick={() => fetchLike(dataUser)} className="text-red-600 cursor-pointer">
+                                <p className="text-red-600">{numberLike}</p>
+                                <button onClick={fetchLike} className="text-red-600 cursor-pointer">
                                     {isLiked ? (
                                         <RiPokerHeartsFill /> 
 

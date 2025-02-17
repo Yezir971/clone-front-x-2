@@ -77,6 +77,12 @@ app.prepare().then(() => {
       console.log(newTweet.dataReTweet)
       io.emit('receiveTweets', newTweet.dataReTweet)
     })
+    // écoute les likes des tweets, on essaye d'écouter les évenements sur des serveurs différents
+    socket.on('like', ({dataLike, idTweet}) => {
+      console.log(dataLike)
+      console.log(idTweet)
+      io.emit(`receiveLike_${idTweet}`, {dataLike})
+    })
     
   });
 

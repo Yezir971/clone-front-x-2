@@ -9,11 +9,11 @@ export async function POST(req) {
         const tweet = await Tweet.findOne({ _id: idTweet, like: idUser });
         
         if(tweet === null){
-            const newLike = await Tweet.findByIdAndUpdate(idTweet, {$push: {like:idUser}})
-            return Response.json({message:"Votre like à bien été envoyé !",newtweet:"newLike", status:200}, {status:200})
+            const newLike = await Tweet.findByIdAndUpdate(idTweet, {$push: {like:idUser}}, {new:true}).populate('userWhoTweet', 'username avatar').populate('userWhoHasReTweet', 'username avatar')
+            return Response.json({message:"Votre like à bien été envoyé !",newtweet:newLike, status:200}, {status:200})
         }else{
-            const newLike = await Tweet.findByIdAndUpdate(idTweet, { $pull: { like:  idUser} })
-            return Response.json({message:"Votre like à bien été envoyé !",newtweet:"false", status:200}, {status:200})
+            const newLike = await Tweet.findByIdAndUpdate(idTweet, { $pull: { like:  idUser} }, {new:true}).populate('userWhoTweet', 'username avatar').populate('userWhoHasReTweet', 'username avatar')
+            return Response.json({message:"Votre like à bien été envoyé !",newtweet:newLike, status:200}, {status:200})
         }
     } catch (error) {
         console.error(error.message)
