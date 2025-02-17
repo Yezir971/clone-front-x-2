@@ -1,36 +1,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaPen } from "react-icons/fa";
+import { IoMdPersonAdd } from "react-icons/io";
+import { IoPersonRemoveSharp } from "react-icons/io5";
 import { URL } from "../utils/constant/url";
 import { useParams, useRouter } from "next/navigation";
 
 const Profil = () => {
 
-//    const [users, setUsers] = useState([]);
-//    const [userId, setUserId] = useState(null);
-//    useEffect(() => {
-//         const fetchUser = async () => {
-//             const [usersRes, userConnectedRes] = await Promise.all([
-//                 fetch(URL.API_USERS_GET),
-//                 fetch(URL.API_USER_GET)
-//             ]);
-//             if (!usersRes.ok || !userConnectedRes.ok) {
-//                 throw new Error("Une erreur a été rencontrée lors de la récupération des données");
-//             }
-//             const usersData = await usersRes.json();
-//             const userConnectedData = await userConnectedRes.json();
-//             setUsers(usersData.user);
-//             setUserId(userConnectedData.user._id);
-//         }
-//         fetchUser();
-//    }, []);
-//    console.log('users : ', users);
-//    const usersSelected = users.filter((user) => user._id != userId);
-//    console.log("selected : ",usersSelected)
-
     const [users, setUsers] = useState([]);
     const { id } = useParams();
-    console.log(id);
+    
     useEffect(() => {
         const fetchUsers = async () => {
             const res = await fetch(URL.API_USERS_GET);
@@ -38,17 +17,19 @@ const Profil = () => {
                 throw new Error('Failed to fetch users');
             }
             const data = await res.json();
-            console.log(data);
             setUsers(data.user);
             return data;
         }
         fetchUsers();
     }, []);
-    console.log('users: ', users);
-    console.log('id :', id);
+
     const thisUser = users.filter((user) => id === user._id);
-    console.log("thisAll: ",thisUser[0]?._id);
-    console.log("this: ",thisUser[0]?.username);
+
+    const [isFollowing, setIsFollowing] = useState(false);
+    const handleClick = () => {
+        setIsFollowing(!isFollowing);
+    }
+
     return(
         <>
             <div className="bg-gray-800 shadow-lg rounded-2xl p-6">
@@ -84,10 +65,10 @@ const Profil = () => {
                 </div>
                 </div>
                 <div className="mt-4 flex justify-end">
-                <Link href={'/update-profil'} className="bg-[#16DB65] text-gray-800 hover:bg-[#058C42] px-4 py-2 rounded-xl flex justify-center items-center gap-2" >
-                    <FaPen />
-                    Modifier
-                </Link>
+                <button className={`bg-[#16DB65] text-gray-800 hover:bg-[#058C42] px-4 py-2 rounded-xl flex justify-center items-center gap-2`} onClick={handleClick} >
+                    {isFollowing ? <IoPersonRemoveSharp /> : <IoMdPersonAdd />}
+                    {isFollowing ? "Se désabonner" : "S'abonner" }
+                </button>
                 </div>
             </div>
         </>
