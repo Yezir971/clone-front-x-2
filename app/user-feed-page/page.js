@@ -7,6 +7,7 @@ import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import RetweetModals from "../modals/retweetModals"
 import TweetCard from "../components/tweetCard"
+import CommentModal from "../modals/commentModal"
 
 const feedPage = () => {
     const [hide, setHide] = useState(false)
@@ -15,7 +16,7 @@ const feedPage = () => {
     const [tweet,setTweet] = useState("")
     const [errorMessage,setErrorMessage] = useState("")
     const [tweets, setTweets] = useState([])
-    const {userState, socket,hideModal, setHideModal, maxWord, setMaxWord} = authContextApi()
+    const {hideModalCommentaire, setHideModalCommentaire,maxWordcomment, setMaxWordComment,userState, socket,hideModal, setHideModal, maxWord, setMaxWord} = authContextApi()
     
 
     const router = useRouter()
@@ -30,7 +31,13 @@ const feedPage = () => {
           ...prev,
           [tweetId]: !prev[tweetId],
         }));
-    };
+    }
+    const toggleModalCommentaire = (tweetId) => {
+        setHideModalCommentaire((prev) => ({
+            ...prev,
+            [tweetId]: !prev[tweetId],
+        }))
+    }
     const fetchAuth = async () => {
         try {
             
@@ -200,15 +207,11 @@ const feedPage = () => {
                                         {/* <!-- Liste des posts --> */}
                                         {tweets && tweets?.sort((a, b) => new Date(b?.createdAt) - new Date(a?.createdAt)).map((element) => (
                                         <div key={element._id} id="postList" className="space-y-4 mt-4">
-                                            <TweetCard tweet={element} userState={userState} toggleModal={toggleModal} />
+                                            <TweetCard tweet={element} userState={userState} toggleModalCommentaire={toggleModalCommentaire} toggleModal={toggleModal} />
                                             
                                             {hideModal[element?._id] && <RetweetModals datasTweet={element} userState={userState} />}
-                                            
-                                            {!element?.reTweet && (
-                                                <>
+                                            {hideModalCommentaire[element?._id] && <CommentModal datasTweet={element} userState={userState} /> }
 
-                                                </>
-                                            )}
                                         </div>
                                         ))}
                                     </div>

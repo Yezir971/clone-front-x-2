@@ -5,7 +5,7 @@ import { RiPokerHeartsLine } from "react-icons/ri";
 import { authContextApi } from "../context/authContext";
 import { useEffect, useState } from "react";
 {/* <RiPokerHeartsLine /> */}
-const TweetCard = ({ tweet, toggleModal, userState }) => {
+const TweetCard = ({ tweet, toggleModal, userState, toggleModalCommentaire }) => {
     const {socket} = authContextApi()
     
     let isRetweet = tweet?.retweet
@@ -91,7 +91,7 @@ const TweetCard = ({ tweet, toggleModal, userState }) => {
                                     <RiPokerHeartsLine />
                                 )}
                             </button>
-                            <button className="hover:text-blue-500">Commenter</button>
+                            <button onClick={() => toggleModalCommentaire(tweet?._id)} className="hover:text-blue-500">Commenter</button>
                             <button onClick={() => toggleModal(tweet?._id)} className="hover:text-green-500">
                             <HiArrowPathRoundedSquare />
                             </button>
@@ -150,7 +150,7 @@ const TweetCard = ({ tweet, toggleModal, userState }) => {
                                         <RiPokerHeartsLine />
                                     )}
                                 </button>
-                                <button className="hover:text-blue-500">Commenter</button>
+                                <button onClick={() => toggleModalCommentaire(tweet?._id)} className="hover:text-blue-500">Commenter</button>
                                 <button onClick={() => toggleModal(tweet?._id)} className="hover:text-green-500">
                                 <HiArrowPathRoundedSquare />
                                 </button>

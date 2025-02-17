@@ -5,7 +5,7 @@ import { authContextApi } from "../context/authContext"
 const RetweetModals = ({datasTweet, userState}) => {
     const [comment ,setComment ] = useState('')
     const {setHideModal, maxWord, setMaxWord, socket} = authContextApi()
-    console.log(userState)
+    // console.log(userState)
 
 
 
@@ -14,6 +14,13 @@ const RetweetModals = ({datasTweet, userState}) => {
         setComment(input);
         setMaxWord(140 - input.length);
     }
+
+    const closeModal = () => {
+        setHideModal(false)
+        setMaxWord(140)
+        setComment('')
+    }
+
     const sendReTweet = async () => {
         try {
             const dataTweet = {
@@ -63,7 +70,7 @@ const RetweetModals = ({datasTweet, userState}) => {
                         <div className="flex justify-end gap-2">
                         <button
                             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                            onClick={() => setHideModal(false)}
+                            onClick={closeModal}
                         >
                             Annuler
                         </button>
