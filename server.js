@@ -69,8 +69,13 @@ app.prepare().then(() => {
     });
     // socket pour écouter en temps réel les tweets
     socket.on('tweet', (newTweet) => {
-      console.log(newTweet.dataTweet)
+      console.log(newTweet)
       io.emit('receiveTweets', newTweet.dataTweet)
+    })
+    // écoute les retweet 
+    socket.on('retweet', (newTweet) => {
+      console.log(newTweet.dataReTweet)
+      io.emit('receiveTweets', newTweet.dataReTweet)
     })
     
   });

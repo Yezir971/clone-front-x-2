@@ -1,5 +1,4 @@
 import { HiArrowPathRoundedSquare } from "react-icons/hi2";
-import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 const TweetCard = ({ tweet, toggleModal }) => {
     let isRetweet = tweet?.retweet;
     return (
@@ -49,11 +48,9 @@ const TweetCard = ({ tweet, toggleModal }) => {
                                 <div className="flex justify-between items-center">
                                 <div className="flex items-center space-x-2">
                                     <span className="text-gray-800 font-semibold">{tweet?.userWhoHasReTweet?.username}</span>
-                                    <span className="text-sm text-gray-500">@b2oba · 72h</span>
+                                    <span className="text-sm text-gray-500">@{tweet?.userWhoHasReTweet?.username} · 72h</span>
                                 </div>
-                                    <button className="text-gray-500 hover:text-blue-500">
-                                        <HiOutlineDotsHorizontal />
-                                    </button>
+
                                 </div>
 
                                 {/* Contenu principal */}

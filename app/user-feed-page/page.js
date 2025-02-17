@@ -200,7 +200,7 @@ const feedPage = () => {
                                         <div key={id} id="postList" className="space-y-4 mt-4">
                                             <TweetCard tweet={element} toggleModal={toggleModal} />
                                             
-                                            {hideModal[element?._id] && <RetweetModals dataTweet={element} userState={userState} />}
+                                            {hideModal[element?._id] && <RetweetModals datasTweet={element} userState={userState} />}
                                             
                                             {!element?.reTweet && (
                                                 <>

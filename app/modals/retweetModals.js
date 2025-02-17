@@ -2,7 +2,7 @@ import { useState } from "react"
 import { authContextApi } from "../context/authContext"
 
 
-const RetweetModals = ({dataTweet, userState}) => {
+const RetweetModals = ({datasTweet, userState}) => {
     const [comment ,setComment ] = useState('')
     const {setHideModal, maxWord, setMaxWord, socket} = authContextApi()
     // console.log(userState)
@@ -16,10 +16,10 @@ const RetweetModals = ({dataTweet, userState}) => {
     }
     const sendReTweet = async () => {
         try {
-            const dataRetweet = {
-                contentTweets: dataTweet?.contentTweets,
+            const dataTweet = {
+                contentTweets: datasTweet?.contentTweets,
                 contentReTweet: comment,
-                userWhoTweet: dataTweet?.userWhoTweet._id,
+                userWhoTweet: datasTweet?.userWhoTweet._id,
                 userWhoHasReTweet: userState?._id
             }
             const response = await fetch('http://localhost:3000/api/post/retweet', {
@@ -27,11 +27,11 @@ const RetweetModals = ({dataTweet, userState}) => {
                 headers:{
                     "Content-Type":'application/json'
                 },
-                body: JSON.stringify(dataRetweet)
+                body: JSON.stringify(dataTweet)
             })
             const data = await response.json()
             if(data.status === 200 ){
-                socket.emit('tweet', data)
+                socket.emit('retweet', data)
                 setComment('')
                 setMaxWord(140)
                 setHideModal(false)
@@ -53,7 +53,7 @@ const RetweetModals = ({dataTweet, userState}) => {
                 <div className="fixed p-4 sm:ml-64 inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-full h-96">
                         <h2 className="text-xl font-bold mb-4">Retweeter</h2>
-                        <p className="mb-4 text-gray-700">{dataTweet.contentTweets}</p>
+                        <p className="mb-4 text-gray-700">{datasTweet.contentTweets}</p>
                         <textarea
                         className="w-full border p-2 rounded mb-4"
                         placeholder="Ajoutez un commentaire"
