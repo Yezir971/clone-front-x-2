@@ -23,7 +23,10 @@ const usersSchema = new mongoose.Schema({
         type: String, 
         default: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png',
     },
-    suscription:{
+    abonnements:{
+        type:Array
+    },
+    abonnés:{
         type:Array
     },
     isVerified:{
