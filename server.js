@@ -32,7 +32,7 @@ app.prepare().then(() => {
       }
     });
 
-    // Gérer la déconnexion
+    // gestions la déconnexion
     socket.on("deleteUser", (userId) => {
       onlineUser = onlineUser.filter(user => user.userId !== userId);
       console.log('onlineUsers', onlineUser);
@@ -46,7 +46,7 @@ app.prepare().then(() => {
       io.emit('getOnlineUser', onlineUser);
     });
 
-    // Gérer l'envoi de messages
+    // Gestions de l'envoi des messages
     socket.on('sendMessage', (msg) => {
       const { newMessage, idUserTarget } = msg;
       console.log('Message reçu:', newMessage.content);
@@ -82,6 +82,12 @@ app.prepare().then(() => {
       console.log(dataLike)
       console.log(idTweet)
       io.emit(`receiveLike_${idTweet}`, {dataLike})
+    })
+
+    // écoute les commentaires des tweets 
+    socket.on('comment', (dataCommentaire,idTweet  ) => {
+      console.log(dataCommentaire)
+      io.emit(`comment_${idTweet}`, {dataCommentaire})
     })
     
   });

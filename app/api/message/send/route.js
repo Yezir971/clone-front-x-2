@@ -41,7 +41,7 @@ const getMessage = async ({sender_id,reciev_id }) => {
                 { sender_id: sender_id, reciev_id: reciev_id },
                 { sender_id: reciev_id , reciev_id: sender_id }
             ]
-        }).sort({ createdAt: 1 }); // Sort messages in chronological order
+        }).sort({ createdAt: 1 });
     } catch (error) {
         throw new Error(error.message);
     }

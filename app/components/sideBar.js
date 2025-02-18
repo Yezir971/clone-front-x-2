@@ -61,7 +61,7 @@ const SideBar = ({hide}) => {
     useEffect(() => {
     if (!socket) return;
     
-        // Écouter les nouvelles notifications
+        // on ecoute les nouvelles notifications
         socket.on("receiveNotification", (newNotif) => {
             // Ajouter le message reçu aux messages existants, pour respecter la structures du state notification on va parcourir notiification
             // si on trouve un _id qui correspond a celui que l'on a on le remplace sinon on l'ajoute 
