@@ -8,8 +8,8 @@ import Users from '@/models/users.model'
 export async function POST(req){
     try {
         connect()
-        const {comment, idTweet, idUser} = await req.json()
-        const sendNewComment = await Commentaire.create({comment:comment, idTweet:idTweet, idUser:idUser}).populate('idUser',"avatar username" )
+        const body = await req.json()
+        const sendNewComment = await Commentaire.create({comment:body.comment, idTweet:body.idTweet, idUser:body.idUser})
         
         return Response.json({message:'votre message a bien été envoyé !', donneEnvoye:sendNewComment , status:200}, {status:200})
     } catch (error) {

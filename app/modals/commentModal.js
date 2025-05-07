@@ -21,24 +21,25 @@ const CommentModal = ({datasTweet, userState}) => {
     const sendCommentaire = async () => {
         try {
             const idTweet = datasTweet._id
+            const body = {
+                comment: comment,
+                idTweet: datasTweet._id,
+                idUser: userState._id
+            }
             const response = await fetch('http://localhost:3000/api/post/comment', {
                 method:'POST', 
                 headers:{
-                    "Content-Type":"application/json",
+                    'Content-Type':'application/json'
                 },
-                body: JSON.stringify({
-                    comment: comment,
-                    idTweet: datasTweet._id,
-                    idUser: userState._id
-                })
+                body: JSON.stringify(body)
             })
             const data = await response.json()
-            // if(data?.status == 200){
-            // }
-            socket.emit(`comment_${datasTweet._id}`,{ dataCommentaire:dataCommentaire.donneEnvoye, idTweet:idTweet} )
             console.log(data)
-            setComment('')
-            console.log(data)
+            console.log(datasTweet._id)
+            if(data.status === 200){
+                socket.emit(`comment`,{ dataCommentaire:dataCommentaire.donneEnvoye, idTweet:idTweet} )
+                setComment('')
+            }
         } catch (error) {
             console.log(error.message)
         }
@@ -73,11 +74,12 @@ const CommentModal = ({datasTweet, userState}) => {
         } 
 
         // on écoute les nouveaux like sur son propre serveur
-        socket.on(`comment_${datasTweet._id}`, ({dataCommentaire}) => {
+        socket.on(`comment_${datasTweet._id}`, ({dataCommentaire }) => {
             // on met a jour le tweet qui a été aimer par un autre utilisateur 
             // console.log(tweet._id)
             // console.log(idTweet)
             setDataCommentaire((prevData) => [...prevData, dataCommentaire]);
+            console.log(dataCommentaire )
         });
 
         // On nettoye l'écouteur lors du démontage du composant
